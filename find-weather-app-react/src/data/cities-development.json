@@ -1,0 +1,40 @@
+[
+        {
+            "city": "Partille",
+            "lat": "57.7333",
+            "lng": "12.1167",
+            "country": "Sweden",
+            "iso2": "SE",
+            "admin_name": "Västra Götaland",
+            "capital": "minor"
+        },
+        {
+            "city": "Ängelholm",
+            "lat": "56.25",
+            "lng": "12.85",
+            "country": "Sweden",
+            "iso2": "SE",
+            "admin_name": "Skåne",
+            "capital": "minor"
+        },
+        {
+            "city": "Rönninge",
+            "lat": "59.2",
+            "lng": "17.7333",
+            "country": "Sweden",
+            "iso2": "SE",
+            "admin_name": "Stockholm",
+            "capital": "minor"
+        },
+        {
+            "city": "Hjo",
+            "lat": "58.3033",
+            "lng": "14.3003",
+            "country": "Sweden",
+            "iso2": "SE",
+            "admin_name": "Västra Götaland",
+            "capital": "admin",
+            "population": null,
+            "population_proper": null
+        }
+    ]
