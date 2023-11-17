@@ -21,6 +21,7 @@ export const WeatherProvider = ({ children }: any) => {
   const [userWeatherType, setUserWeatherType] = useState('');
   const [weatherCodes, setWeatherCodes] = useState<number[]>([]);
   const [hasRendered, setHasRendered] = useState(false);
+  const [background, setBackground] = useState<string>('https://images.unsplash.com/photo-1541480110211-586977e40589?q=80&w=2693&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')
 
   useEffect(() => {
     setFetchedCities([]);
@@ -57,6 +58,7 @@ export const WeatherProvider = ({ children }: any) => {
       case 'clear-skies':
         setWeatherCodes([1, 2, 3]);
         weatherIcon = 'sun';
+        setBackground('https://images.unsplash.com/photo-1550133730-695473e544be?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
         // backgroundElement.style.backgroundImage =
         //   'url(https://images.unsplash.com/photo-1550133730-695473e544be?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)';
         break;
@@ -152,6 +154,8 @@ export const WeatherProvider = ({ children }: any) => {
       value={{
         setWeatherType,
         fetchedCities,
+        background,
+        userWeatherType
       }}
     >
       {children}
