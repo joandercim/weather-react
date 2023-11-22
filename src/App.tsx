@@ -1,18 +1,21 @@
-import { useState } from 'react'
-import './App.css'
+import { useContext } from 'react';
+import './App.css';
 import Header from './components/UserInputSection';
-import { WeatherProvider } from './context/WeatherContext';
+import WeatherContext from './context/WeatherContext';
 import BackgroundOverlay from './components/shared/BackgroundOverlay';
+import ResponseContainer from './components/ResponseContainer';
+import Modal from './components/Modal';
 
 function App() {
-  const [count, setCount] = useState(0);
-
+  const { modalOpen } = useContext(WeatherContext);
   return (
-    <WeatherProvider>
-    <BackgroundOverlay />
-    <Header />
-    </WeatherProvider>
-  )
+      <div className="container text-center">
+        <Modal className={modalOpen ? 'modal show' : 'modal'}/>
+        <BackgroundOverlay />
+        <Header />
+        <ResponseContainer />
+      </div>
+  );
 }
 
-export default App
+export default App;

@@ -1,16 +1,16 @@
 import { createContext, useState, useEffect } from 'react';
 import cities from '../data/cities-development.json';
 
+const initialWeatherStateTemp: any = {
+  test: true,
+};
+
 interface StoredCityInterface {
   lat: number;
   lng: number;
   city: object;
   data: any;
 }
-
-const initialWeatherStateTemp: any = {
-  test: true,
-};
 
 const WeatherContext = createContext(initialWeatherStateTemp);
 
@@ -21,7 +21,7 @@ export const WeatherProvider = ({ children }: any) => {
   const [userWeatherType, setUserWeatherType] = useState('');
   const [weatherCodes, setWeatherCodes] = useState<number[]>([]);
   const [hasRendered, setHasRendered] = useState(false);
-  const [background, setBackground] = useState<string>('https://images.unsplash.com/photo-1541480110211-586977e40589?q=80&w=2693&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')
+  const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
     setFetchedCities([]);
@@ -38,10 +38,10 @@ export const WeatherProvider = ({ children }: any) => {
   useEffect(() => {
     if (hasRendered) {
       if (matches.length !== 0) {
-        console.log('matches changed', matches)
+        // console.log('matches changed', matches)
         // This is from where we DISLPAY RESULTS
       } else {
-        console.log('No matches found');
+        // console.log('No matches found');
       }
     }
   }, [matches]);
@@ -53,51 +53,31 @@ export const WeatherProvider = ({ children }: any) => {
   }, [weatherCodes]);
 
   const interpretUserInput = (userInput: string) => {
-    let weatherIcon = '';
     switch (userInput) {
       case 'clear-skies':
         setWeatherCodes([1, 2, 3]);
-        weatherIcon = 'sun';
-        setBackground('https://images.unsplash.com/photo-1550133730-695473e544be?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
-        // backgroundElement.style.backgroundImage =
-        //   'url(https://images.unsplash.com/photo-1550133730-695473e544be?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)';
         break;
       case 'cloudy':
         setWeatherCodes([5, 6]);
-        weatherIcon = 'cloud';
-        // backgroundElement.style.backgroundImage =
-        //   'url(https://images.unsplash.com/photo-1485249245068-d8dc50b77cc7?q=80&w=2662&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)';
         break;
       case 'foggy':
-        weatherIcon = 'smog';
-        // backgroundElement.style.backgroundImage =
-        //   'url(https://images.unsplash.com/photo-1541480110211-586977e40589?q=80&w=2693&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)';
         setWeatherCodes([7]);
         break;
       case 'raining':
-        weatherIcon = 'cloud-showers-heavy';
-        // backgroundElement.style.backgroundImage =
-        //   'url(https://images.unsplash.com/photo-1519692933481-e162a57d6721?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)';
         setWeatherCodes([8, 9, 10, 18, 19, 20]);
         break;
       case 'thunder':
-        weatherIcon = 'cloud-bolt';
-        // backgroundElement.style.backgroundImage =
-        //   'url(https://images.unsplash.com/photo-1431440869543-efaf3388c585?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)';
         setWeatherCodes([21, 11]);
         break;
       case 'snowing':
-        weatherIcon = 'snowflake';
         setWeatherCodes([25, 26, 27, 13, 14, 15, 16, 17]);
-        // backgroundElement.style.backgroundImage =
-        //   'url(https://images.unsplash.com/photo-1577457943926-11193adc0563?q=80&w=2702&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)';
         break;
     }
   };
 
   function filterMatchingWeather(weatherCodes: number[]) {
-    let matchesArray = [];
-    weatherCodes.forEach((weatherCode) => {
+    let matchesArray: StoredCityInterface[] = [];
+    weatherCodes.forEach(() => {
       matchesArray = fetchedCities.filter((city) => {
         const weatherType = city.data.timeSeries[0].parameters[18].values[0];
         return weatherCodes.includes(weatherType)
@@ -143,9 +123,17 @@ export const WeatherProvider = ({ children }: any) => {
   };
 
   // Set weathertype
-  const setWeatherType = (id) => {
+  const setWeatherType = (id: string) => {
     setUserWeatherType(id);
   };
+
+
+
+  const handleReadMore = (id:string) => {
+    setModalOpen(true);
+  }
+
+
 
   // Filter weather
 
@@ -153,9 +141,11 @@ export const WeatherProvider = ({ children }: any) => {
     <WeatherContext.Provider
       value={{
         setWeatherType,
+        handleReadMore,
         fetchedCities,
-        background,
-        userWeatherType
+        userWeatherType,
+        matches,
+        modalOpen,
       }}
     >
       {children}
