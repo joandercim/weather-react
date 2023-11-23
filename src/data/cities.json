@@ -55,16 +55,6 @@
             "population_proper": "137326"
         },
         {
-            "city": "Uppsala",
-            "lat": "59.8601",
-            "lng": "17.64",
-            "country": "Sweden",
-            "iso2": "SE",
-            "admin_name": "Stockholm",
-            "population": "133117",
-            "population_proper": "133117"
-        },
-        {
             "city": "Västerås",
             "lat": "59.6161",
             "lng": "16.5528",
@@ -850,16 +840,6 @@
             "admin_name": "Skåne",
             "population": "6937",
             "population_proper": "6937"
-        },
-        {
-            "city": "Vega",
-            "lat": "59.1903",
-            "lng": "18.1275",
-            "country": "Sweden",
-            "iso2": "SE",
-            "admin_name": "Stockholm",
-            "population": "6590",
-            "population_proper": "6590"
         },
         {
             "city": "Surte",

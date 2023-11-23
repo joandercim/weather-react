@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect } from 'react';
-import cities from '../data/cities-development.json';
+import cities from '../data/cities.json';
 
 const initialWeatherStateTemp: any = {
   test: true,
@@ -20,13 +20,11 @@ export const WeatherProvider = ({ children }: any) => {
   const [matches, setMatches] = useState<StoredCityInterface[]>([]);
   const [userWeatherType, setUserWeatherType] = useState('');
   const [weatherCodes, setWeatherCodes] = useState<number[]>([]);
-  const [hasRendered, setHasRendered] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
-
+  const [cityInFocus, setCityInFocus] = useState('');
   useEffect(() => {
     setFetchedCities([]);
     getWeatherByCity();
-    setHasRendered(true);
   }, []);
 
   useEffect(() => {
@@ -34,17 +32,6 @@ export const WeatherProvider = ({ children }: any) => {
       interpretUserInput(userWeatherType);
     }
   }, [userWeatherType]);
-
-  useEffect(() => {
-    if (hasRendered) {
-      if (matches.length !== 0) {
-        // console.log('matches changed', matches)
-        // This is from where we DISLPAY RESULTS
-      } else {
-        // console.log('No matches found');
-      }
-    }
-  }, [matches]);
 
   useEffect(() => {
     if (weatherCodes.length !== 0) {
@@ -127,12 +114,14 @@ export const WeatherProvider = ({ children }: any) => {
     setUserWeatherType(id);
   };
 
-
-
   const handleReadMore = (id:string) => {
     setModalOpen(true);
+    setCityInFocus(id);
   }
 
+  function closeModal() {
+    setModalOpen(false)
+  }
 
 
   // Filter weather
@@ -142,10 +131,12 @@ export const WeatherProvider = ({ children }: any) => {
       value={{
         setWeatherType,
         handleReadMore,
+        closeModal,
         fetchedCities,
         userWeatherType,
         matches,
         modalOpen,
+        cityInFocus,
       }}
     >
       {children}

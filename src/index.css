@@ -177,7 +177,7 @@ h1 {
   display: flex;
 }
 
-.modal i.fa-xmark {
+.modal .fa-solid {
   font-size: 1.5rem;
   position: absolute;
   top: 20px;
