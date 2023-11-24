@@ -1,21 +1,57 @@
 import { useContext, useEffect, useState } from 'react';
 import { FaXmark } from 'react-icons/fa6';
 import WeatherContext from '../context/WeatherContext';
-import { useSpring, animated } from 'react-spring';
 import WeatherWidget from './WeatherWidget';
 
 interface ModalProps {
   className: string;
 }
 
+interface CityInfoInterface {
+  batchcomplete: string,
+  query: {
+    pages: {
+      [key: string]: {
+        extract: string,
+        ns: number, 
+        pageid: number,
+        title: string
+      }
+    }
+  }
+}
+
+interface WeatherDataInterface {
+  parameters: Array<{
+    validTime: string,
+    values: number[]
+  }>
+}
+
+interface CityMatchInterface {
+  city: string,
+  lng: string,
+  lat: string,
+  data: {
+    approvedTime: string,
+    geometry: {
+      type: string,
+      coordinates: number[]
+    }
+    timeSeries: WeatherDataInterface[]
+  }
+}
+
 function Modal({ className }: ModalProps) {
-  const { matches, closeModal, cityInFocus, modalOpen } =
+  const { matches, closeModal, cityInFocus } =
     useContext(WeatherContext);
-  const [currentWeather, setCurrentWeather] = useState(null);
+  const [currentWeather, setCurrentWeather] = useState<WeatherDataInterface | null >(null);
   const [cityInfo, setCityInfo] = useState({ outputString: '', title: '' });
 
+
   useEffect(() => {
-    const matchesFiltered = matches.filter((city) => city.city === cityInFocus);
+    const matchesFiltered = matches.filter((city: CityMatchInterface) => city.city === cityInFocus);
+
 
     if (matchesFiltered.length > 0) {
       const weather = matchesFiltered[0].data.timeSeries[0];
@@ -47,25 +83,16 @@ function Modal({ className }: ModalProps) {
     ? currentWeather.parameters[12].values[0]
     : null;
 
-  function NumberTicker({ num }) {
-    const { number } = useSpring({
-      from: { number: 0 },
-      number: num,
-      delay: 200,
-      config: {
-        mass: 1,
-        tension: 20,
-        friction: 5,
-      },
-    });
-    return <animated.div>{number.to((n) => n.toFixed(0))}</animated.div>;
-  }
-
   async function getCityInfo(city: string) {
     try {
       const res = await fetch(`api/${city}`);
-      const data = await res.json();
-      const pageId = Object.keys(data.query.pages);
+
+      if (!res.ok) {
+        throw new Error(`Response was not ok. ${res.status}`)
+      }
+      const data: CityInfoInterface = await res.json();
+
+      const pageId = Object.keys(data.query.pages)[0];
       const summary = data.query.pages[pageId].extract;
       const outputString = summary.replace(/\(.*?\)/, '');
       const title: string = data.query.pages[pageId].title;

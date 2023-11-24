@@ -1,8 +1,18 @@
 import { useSpring, animated } from 'react-spring';
 
-function WeatherWidget({ num, text, value }) {
+interface WeatherWidgetProps {
+  num: number | null,
+  text: string, 
+  value: string
+}
 
-    function NumberTicker({ num }) {
+interface NumberTickerInterface {
+  num: number | null
+}
+
+function WeatherWidget({ num, text, value }: WeatherWidgetProps) {
+
+    function NumberTicker({ num }: NumberTickerInterface) {
         const { number } = useSpring({
           from: { number: 0 },
           number: num,
@@ -13,7 +23,13 @@ function WeatherWidget({ num, text, value }) {
             friction: 5,
           },
         });
-        return <animated.div>{number.to((n) => n.toFixed(0))}</animated.div>;
+        if (num !== null) {
+          if (text === 'Air Temp' && num < 10) {
+            return <animated.div>{number.to((n) => n.toFixed(1))}</animated.div>;
+          } else {
+            return <animated.div>{number.to((n) => n.toFixed(0))}</animated.div>;
+          }
+        }
       }
 
   return (

@@ -11,14 +11,31 @@ import {
 import { FaCloudBolt } from 'react-icons/fa6';
 import { RiSunFill } from 'react-icons/ri';
 
-interface StoredCityInterface {
-    lat: number;
-    lng: number;
-    city: object;
-    data: any;
-  }
 
-const iconMapper = {
+type WeatherIconName = 'RiSunFill' | 'FaCloud' | 'FaCloudBolt' | 'FaCloudShowersHeavy' | 'FaSnowflake' | 'FaSmog';
+
+interface CityMatchInterface {
+  city: string,
+  lng: string,
+  lat: string,
+  data: {
+    approvedTime: string,
+    geometry: {
+      type: string,
+      coordinates: number[]
+    }
+    timeSeries: WeatherDataInterface[]
+  }
+}
+
+interface WeatherDataInterface {
+  parameters: Array<{
+    validTime: string,
+    values: number[]
+  }>
+}
+
+const iconMapper: { [key in WeatherIconName]: React.ComponentType } = {
   RiSunFill: RiSunFill,
   FaCloud: FaCloud,
   FaCloudBolt: FaCloudBolt,
@@ -28,7 +45,7 @@ const iconMapper = {
 };
 
 function ResponseContainer() {
-  const [weatherIcon, setWeatherIcon] = useState('');
+  const [weatherIcon, setWeatherIcon] = useState<WeatherIconName | ''>('');
   const { userWeatherType, matches } = useContext(WeatherContext);
   const IconComponent = weatherIcon ? iconMapper[weatherIcon] : null;
 
@@ -63,7 +80,7 @@ function ResponseContainer() {
     <div id="response" className="container">
       <h2 className='text-center'>Yes! There currently {userWeatherType} in {matches.length} cities.</h2>
       <div className="response-cards">
-        {matches.map((city: StoredCityInterface) => (
+        {matches.map((city: CityMatchInterface) => (
           <ResponseCard key={city.city} IconComponent={IconComponent} city={city} />
         ))}
       </div>

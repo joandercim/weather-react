@@ -1,14 +1,33 @@
 import {useContext} from 'react';
 import WeatherContext from '../context/WeatherContext';
 
-interface StoredCityInterface {
-    lat: number;
-    lng: number;
-    city: object;
-    data: any;
+interface CityMatchInterface {
+  city: string,
+  lng: string,
+  lat: string,
+  data: {
+    approvedTime: string,
+    geometry: {
+      type: string,
+      coordinates: number[]
+    }
+    timeSeries: WeatherDataInterface[]
   }
+}
 
-function ResponseCard({ IconComponent, city }) {
+interface WeatherDataInterface {
+  parameters: Array<{
+    validTime: string,
+    values: number[]
+  }>
+}
+
+interface ResponseCardProps {
+  IconComponent: React.ComponentType<{ className?: string }> | null;
+  city: CityMatchInterface
+}
+
+function ResponseCard({ IconComponent, city }: ResponseCardProps) {
 
     const { handleReadMore } = useContext(WeatherContext)
 
@@ -24,7 +43,7 @@ function ResponseCard({ IconComponent, city }) {
           <em>LNG: {city.lng}</em>
         </p>
       </div>
-      <p className="more btn" id={city.city} onClick={(e) => handleReadMore(e.target.id)}>
+      <p className="more btn" id={city.city} onClick={(e) => handleReadMore((e.target as HTMLParagraphElement).id)}>
         Read more
       </p>
     </div>

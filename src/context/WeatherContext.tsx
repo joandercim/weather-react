@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect } from 'react';
-import cities from '../data/cities.json';
+import cities from '../data/cities-development.json';
 
 const initialWeatherStateTemp: any = {
   test: true,
@@ -22,6 +22,10 @@ export const WeatherProvider = ({ children }: any) => {
   const [weatherCodes, setWeatherCodes] = useState<number[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [cityInFocus, setCityInFocus] = useState('');
+  const [fetchedCitiesCount, setFetchedCitiesCount] = useState(0);
+  const [progress, setProgress] = useState(0);
+  let fetchedCount = 0;
+
   useEffect(() => {
     setFetchedCities([]);
     getWeatherByCity();
@@ -98,11 +102,14 @@ export const WeatherProvider = ({ children }: any) => {
 
       // setFetchedCities((prev) => [...prev, storedCity]);
       setFetchedCities((prev) => [...prev, storedCity]);
+      fetchedCount++;
+      console.log(fetchedCount)
+      
     } catch (error) {
       console.log(`Ett fel uppstod vid hämtning av ${city}: ${error}`);
     }
   };
-
+  
   // Fetch weather data
   const getWeatherByCity = async () => {
     const promises = cities.map((city) => fetchCurrentWeather(city));
